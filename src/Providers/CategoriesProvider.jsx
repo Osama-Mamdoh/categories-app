@@ -3,7 +3,7 @@ import data from "../data.json";
 import CatContext from "./CatContext";
 
 class CategoriesProvider extends React.Component {
-  updateData = data => {
+  removeItem = data => {
     let categoryId = parseInt(data.getAttribute("catId"));
     let itemId = parseInt(data.getAttribute("itemId"));
     let categoriesData = this.state.data;
@@ -16,9 +16,31 @@ class CategoriesProvider extends React.Component {
     this.setState({ data: categoriesData });
   };
 
+  createCategory = data => {
+    if (data.name !== "") {
+      let categoriesData = this.state.data;
+      let cat = {
+        ...data,
+        items: [
+          {
+            id: categoriesData.categories.length * 50,
+            name: "Apple",
+            description:
+              "Homemade crispy nacho chips served with fresh salsa dip",
+            price: categoriesData.categories.length * 5
+          }
+        ],
+        id: categoriesData.categories.length
+      };
+      categoriesData.categories.push(cat);
+      this.setState({ data: categoriesData });
+    }
+  };
+
   state = {
     data: data,
-    updateData: this.updateData
+    removeItem: this.removeItem,
+    createCategory: this.createCategory
   };
 
   render() {

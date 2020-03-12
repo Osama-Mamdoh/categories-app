@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Container, Grid, Menu, Table } from "../index";
+import { Container, Grid, Menu, Table, Form, Button, Message } from "../index";
 import data from "../data.json";
 import { history } from "../Helpers";
 import { authenticationService } from "../Services";
@@ -15,8 +15,10 @@ class CategoriesPage extends React.Component {
     this.state = {
       currentUser: props.user.currentUser,
       isAdmin: props.user.isAdmin,
-      activeItem: data.categories[0]
+      activeItem: data.categories[0],
+      newCategory: { name: "", description: "" }
     };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleItemClick = (e, { name, id }) => {
@@ -81,8 +83,26 @@ class CategoriesPage extends React.Component {
     history.push("/login");
   }
 
+  handleChange(event) {
+    if (event.target.name === "name") {
+      this.setState({
+        newCategory: {
+          description: this.state.newCategory.description,
+          name: event.target.value
+        }
+      });
+    } else if (event.target.name === "description") {
+      this.setState({
+        newCategory: {
+          name: this.state.newCategory.name,
+          description: event.target.value
+        }
+      });
+    }
+  }
+
   render() {
-    const { currentUser, activeItem } = this.state;
+    const { currentUser, activeItem, isAdmin, newCategory } = this.state;
     return (
       <CatContext.Consumer>
         {context => (
@@ -98,12 +118,48 @@ class CategoriesPage extends React.Component {
                 <Grid columns={2} divided>
                   <Grid.Row>
                     <Grid.Column width={3}>
-                      <Menu.Item header>Categories</Menu.Item>
+                      <Message warning>
+                        <Message.Header>Categories</Message.Header>
+                      </Message>
                       <VerticalList
                         activeItem={activeItem}
                         categories={context.data.categories}
                         onHandleItem={this.handleItemClick}
                       ></VerticalList>
+                      {isAdmin && (
+                        <Fragment>
+                          <Message warning>
+                            <Message.Header>Create Category</Message.Header>
+                          </Message>
+                          <Form>
+                            <Form.Input
+                              fluid
+                              name="name"
+                              label="Category Name"
+                              placeholder="Category Name"
+                              value={this.state.newCategory.name}
+                              onChange={this.handleChange}
+                              required
+                            />
+                            <Form.TextArea
+                              name="description"
+                              label="Category Description"
+                              placeholder="Category Description"
+                              value={this.state.newCategory.description}
+                              onChange={this.handleChange}
+                            />
+                            <Button
+                              primary
+                              type="submit"
+                              onClick={event => {
+                                context.createCategory(newCategory);
+                              }}
+                            >
+                              Submit
+                            </Button>
+                          </Form>
+                        </Fragment>
+                      )}
                     </Grid.Column>
                     <Grid.Column width={13}>
                       <RedTable

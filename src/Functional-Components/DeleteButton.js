@@ -10,7 +10,7 @@ const DeleteButton = props => {
       catId={props.catId}
       itemId={props.itemId}
       onClick={event => {
-        category.updateData(event.target);
+        category.removeItem(event.target);
       }}
     >
       Delete
