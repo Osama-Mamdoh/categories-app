@@ -32,15 +32,18 @@ function login(data) {
       role: Role.User
     }
   ];
-  const user = users.find(
-    x => x.username === data.username && x.password === data.password
-  );
-  if (!user) return "Username or password is incorrect";
-  else {
-    localStorage.setItem("currentUser", JSON.stringify(user));
-    currentUserSubject.next(user);
-    return user;
-  }
+  return new Promise(function(resolve, reject) {
+    const user = users.find(
+      x => x.username === data.username && x.password === data.password
+    );
+    if (user) {
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      currentUserSubject.next(user);
+      resolve(user);
+    } else {
+      reject("Username or password is incorrect");
+    }
+  });
 }
 
 function logout() {

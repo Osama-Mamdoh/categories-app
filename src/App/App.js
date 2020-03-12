@@ -1,4 +1,4 @@
-import React, { Component, useContext } from "react";
+import React, { Component } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { history, Role } from "../Helpers";
 import { authenticationService } from "../Services";
@@ -26,7 +26,6 @@ export default class App extends Component {
   }
 
   render() {
-    const { currentUser } = this.state;
     return (
       <CategoriesProvider>
         <Router history={history}>

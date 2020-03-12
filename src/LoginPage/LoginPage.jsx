@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Button, Form, Grid, Header, Segment } from "../index";
 
 import { authenticationService } from "../Services";
@@ -22,8 +22,14 @@ class LoginPage extends React.Component {
   }
 
   handleSubmit(event) {
-    authenticationService.login(this.state);
-    this.props.history.push("/home");
+    authenticationService.login(this.state).then(
+      user => {
+        this.props.history.push("/home");
+      },
+      error => {
+        alert(error);
+      }
+    );
     event.preventDefault();
   }
 
@@ -48,6 +54,7 @@ class LoginPage extends React.Component {
                 placeholder="Username"
                 value={this.state.username}
                 onChange={this.handleChange}
+                required
               />
               <Form.Input
                 fluid
@@ -58,6 +65,7 @@ class LoginPage extends React.Component {
                 name="password"
                 value={this.state.password}
                 onChange={this.handleChange}
+                required
               />
 
               <Button color="teal" fluid size="large">
