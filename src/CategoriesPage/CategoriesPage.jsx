@@ -28,9 +28,7 @@ class CategoriesPage extends React.Component {
   createHeader = categories => {
     let header = [];
     if (this.state.activeItem.id) {
-      let headerItems = Object.keys(
-        categories.find(x => x.id === this.state.activeItem.id).items[0]
-      ).filter(item => item !== "id");
+      let headerItems = ["name", "description", "price"];
       headerItems.forEach((element, index) =>
         header.push(
           <Table.HeaderCell key={index}>
@@ -51,7 +49,10 @@ class CategoriesPage extends React.Component {
 
   createTable = categories => {
     let table = [];
-    if (this.state.activeItem.id) {
+    if (
+      this.state.activeItem.id &&
+      categories.find(x => x.id === this.state.activeItem.id).items.length > 0
+    ) {
       let tableData = categories.find(x => x.id === this.state.activeItem.id)
         .items;
       let headerData = Object.keys(tableData[0]).filter(item => item !== "id");
@@ -74,6 +75,12 @@ class CategoriesPage extends React.Component {
         }
         table.push(<Table.Row key={tableData[i].id} children={children} />);
       }
+    } else {
+      table.push(
+        <Table.Row>
+          <Table.Cell>Sorry no items found</Table.Cell>
+        </Table.Row>
+      );
     }
     return table;
   };
